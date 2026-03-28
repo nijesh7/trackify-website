@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Trackify - Registration</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: url('10141608.jpg') no-repeat center center fixed;
+      background-size: cover;
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    /* 🔥 IMPROVED TITLE */
+    .title {
+      font-size: 36px;
+      font-weight: bold;
+      color: #00f2ff;
+      text-shadow: 0 0 10px rgba(0,255,255,0.7);
+      margin-bottom: 5px;
+      text-align: center;
+    }
+
+    .subtitle {
+      font-size: 18px;
+      color: #ffffff;
+      margin-bottom: 20px;
+      text-align: center;
+      letter-spacing: 1px;
+    }
+
+    /* 🔥 CARD DESIGN */
+    .register-container {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+      width: 350px;
+      backdrop-filter: blur(10px);
+    }
+
+    h2 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 25px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      color: #555;
+      font-size: 14px;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 18px;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      font-size: 15px;
+      transition: 0.3s;
+    }
+
+    /* 🔥 INPUT FOCUS EFFECT */
+    input:focus {
+      border-color: #00ccff;
+      outline: none;
+      box-shadow: 0 0 5px rgba(0,204,255,0.5);
+    }
+
+    /* 🔥 BUTTON IMPROVED */
+    .login-button {
+      width: 100%;
+      padding: 12px;
+      background: orangered;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .login-button:hover {
+      background: #e64a19;
+      transform: scale(1.03);
+    }
+
+    .error {
+      color: red;
+      font-size: 14px;
+      margin-top: -10px;
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>  
+
+  <!-- 🔥 UPDATED TITLE -->
+  <div class="title">🚀 Trackify</div>
+  <div class="subtitle">Smart Goal Planner with Progress & Insights</div>
+
+  <div class="register-container">
+    <h2>User Registration</h2>
+    <form id="registerForm">
+      <label for="username">Username</label>
+      <input type="text" id="username" name="username" placeholder="Enter your username (e.g., Nijesh)">
+
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" placeholder="Enter your password">
+      
+      <div class="error" id="error-message"></div>
+
+      <button type="submit" class="login-button">Login</button>
+    </form>
+  </div>
+
+  <script>
+    const form = document.getElementById('registerForm');
+    const password = document.getElementById('password');
+    const username = document.getElementById('username');
+    const errorMsg = document.getElementById('error-message');
+
+    form.addEventListener('submit', function(event) {
+      event.preventDefault(); 
+
+      if (username.value.trim() === "") {
+        errorMsg.textContent = "Username cannot be empty!";
+        return;
+      }
+
+      if (password.value.length < 6) {
+        errorMsg.textContent = 'Password must be at least 6 characters long!';
+        return;
+      }
+
+      errorMsg.textContent = '';
+
+      // ✅ Save username
+      localStorage.setItem("username", username.value);
+
+      window.location.href = "home.html";
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Add Goal - Trackify</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  display: flex;
+  background: url('10141608.jpg') no-repeat center center fixed;
+  background-size: cover;
+}
+
+/* 🔥 SIDEBAR */
+.sidebar {
+  width: 220px;
+  background: orangered;
+  height: 100vh;
+  padding: 20px;
+}
+
+.sidebar h2 {
+  color: white;
+}
+
+.sidebar button {
+  width: 100%;
+  margin: 10px 0;
+  padding: 12px;
+  border: none;
+  background: white;
+  color: orangered;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* 🔥 MAIN */
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 🔥 NAVBAR */
+.navbar {
+  background: orangered;
+  color: white;
+  padding: 18px 30px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 22px;
+  font-weight: bold;
+}
+
+/* 🔥 LOGOUT */
+.logout-btn {
+  background: black;
+  color: white;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* 🔥 FORM CENTER */
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+}
+
+/* 🔥 CARD */
+.goal-box {
+  background: rgba(255,255,255,0.95);
+  padding: 35px;
+  border-radius: 20px;
+  width: 400px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  text-align: center;
+}
+
+.goal-box h2 {
+  color: orangered;
+}
+
+/* INPUT */
+label {
+  display: block;
+  text-align: left;
+  margin-top: 10px;
+}
+
+input, textarea {
+  width: 100%;
+  padding: 12px;
+  margin-top: 5px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+/* BUTTON */
+.add-btn {
+  width: 100%;
+  padding: 12px;
+  margin-top: 15px;
+  background: orangered;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.add-btn:hover {
+  background: #e64a19;
+}
+
+.success {
+  color: green;
+  margin-top: 10px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- 🔥 SIDEBAR -->
+<div class="sidebar">
+  <h2>🚀 Trackify</h2>
+  <button onclick="location.href='home.html'">🏠 Dashboard</button>
+  <button onclick="location.href='add goal.html'">➕ Add Goal</button>
+  <button onclick="location.href='view goal.html'">📋 View Goals</button>
+  <button onclick="location.href='home.html#graph'">📊 Graph View</button> <!-- 🔥 ADDED -->
+</div>
+
+<!-- 🔥 MAIN -->
+<div class="main">
+
+  <!-- NAVBAR -->
+  <div class="navbar">
+    🚀 Add Goal
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
+
+  <!-- FORM -->
+  <div class="container">
+    <div class="goal-box">
+
+      <h2>Add New Goal</h2>
+
+      <form id="goalForm">
+        <label>Goal Title</label>
+        <input type="text" id="title" required>
+
+        <label>Description</label>
+        <textarea id="desc" rows="3" required></textarea>
+
+        <label>Deadline</label>
+        <input type="date" id="deadline" required>
+
+        <button type="submit" class="add-btn">Add Goal</button>
+      </form>
+
+      <div class="success" id="successMessage"></div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+const form = document.getElementById('goalForm');
+const successMsg = document.getElementById('successMessage');
+
+form.addEventListener('submit', function(e) {
+  e.preventDefault();
+
+  const goal = {
+    title: document.getElementById('title').value,
+    desc: document.getElementById('desc').value,
+    deadline: document.getElementById('deadline').value,
+    progress: 0
+  };
+
+  let goals = JSON.parse(localStorage.getItem('goals')) || [];
+  goals.push(goal);
+  localStorage.setItem('goals', JSON.stringify(goals));
+
+  successMsg.textContent = "Goal added successfully! 🎯";
+
+  form.reset();
+
+  setTimeout(() => {
+    window.location.href = "view goal.html";
+  }, 1000);
+});
+
+function logout() {
+  window.location.href = "registration.html";
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Trackify Dashboard</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  display: flex;
+  background: url('10141608.jpg') no-repeat center center fixed;
+  background-size: cover;
+  color: white;
+}
+
+/* 🔥 SIDEBAR */
+.sidebar {
+  width: 230px;
+  background: orangered;
+  height: 100vh;
+  padding: 25px;
+}
+
+.sidebar h2 {
+  color: white;
+  margin-bottom: 20px;
+}
+
+.sidebar button {
+  width: 100%;
+  margin: 12px 0;
+  padding: 14px;
+  border: none;
+  background: white;
+  color: orangered;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 15px;
+}
+
+/* 🔥 MAIN */
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 🔥 NAVBAR */
+.navbar {
+  background: orangered;
+  padding: 20px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+/* 🔥 LOGOUT */
+.logout-btn {
+  background: black;
+  color: white;
+  padding: 12px 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* 🔥 CONTENT */
+.content {
+  padding: 35px;
+  max-width: 1300px;
+}
+
+/* 🔥 CARDS (BIGGER) */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 25px;
+  margin-top: 25px;
+}
+
+.card {
+  background: rgba(255,255,255,0.95);
+  color: black;
+  padding: 25px;
+  border-radius: 15px;
+  text-align: center;
+  font-size: 18px;
+}
+
+.card p {
+  font-size: 28px;
+  color: orangered;
+}
+
+/* 🔥 BOXES */
+.box {
+  background: rgba(255,255,255,0.95);
+  color: black;
+  padding: 25px;
+  border-radius: 15px;
+  margin-top: 25px;
+  text-align: center;
+  font-size: 18px;
+}
+
+/* 🔥 GRAPH BIGGER */
+.graph-container {
+  background: white;
+  padding: 30px;
+  border-radius: 20px;
+  width: 900px;         /* 🔥 BIG */
+  margin: 40px auto;
+}
+
+.graph-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+#myChart, #barChart {
+  width: 400px !important;
+  height: 320px !important;
+}
+</style>
+</head>
+
+<body>
+
+<div class="sidebar">
+  <h2>🚀 Trackify</h2>
+  <button onclick="showDashboard()">🏠 Dashboard</button>
+  <button onclick="location.href='add goal.html'">➕ Add Goal</button>
+  <button onclick="location.href='view goal.html'">📋 View Goals</button>
+  <button onclick="showGraph()">📊 Graph View</button>
+</div>
+
+<div class="main">
+
+  <div class="navbar">
+    🚀 Trackify Dashboard
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
+
+  <div class="content" id="dashboard">
+
+    <h2 id="greeting"></h2>
+    <p id="date"></p>
+
+    <div class="cards">
+      <div class="card"><h4>Total</h4><p id="total"></p></div>
+      <div class="card"><h4>Completed</h4><p id="completed"></p></div>
+      <div class="card"><h4>Progress</h4><p id="progress"></p></div>
+      <div class="card"><h4>Pending</h4><p id="pending"></p></div>
+      <div class="card"><h4>Completion</h4><p id="rate"></p></div>
+    </div>
+
+    <div class="box">
+      <h3>💬 Daily Motivation</h3>
+      <p id="quote"></p>
+    </div>
+
+    <div class="box">
+      <h3>💡 Daily Goal Tip</h3>
+      <p id="tip"></p>
+    </div>
+
+  </div>
+
+  <!-- GRAPH -->
+  <div class="content" id="graphSection" style="display:none;">
+    <div class="graph-container">
+      <h2 style="color:black;text-align:center;">📊 Goal Analytics</h2>
+      <div class="graph-row">
+        <canvas id="myChart"></canvas>
+        <canvas id="barChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const user = localStorage.getItem("username") || "Guest";
+
+const hour = new Date().getHours();
+let greet = hour < 12 ? "Good Morning" : hour < 18 ? "Good Afternoon" : "Good Evening";
+
+document.getElementById("greeting").textContent = `${greet}, ${user}`;
+document.getElementById("date").textContent = new Date().toDateString();
+
+let goals = JSON.parse(localStorage.getItem("goals")) || [];
+
+let total = goals.length, completed=0, progress=0, pending=0;
+
+goals.forEach(g=>{
+  let p = g.progress||0;
+  if(p===100) completed++;
+  else if(p>0) progress++;
+  else pending++;
+});
+
+document.getElementById("total").textContent=total;
+document.getElementById("completed").textContent=completed;
+document.getElementById("progress").textContent=progress;
+document.getElementById("pending").textContent=pending;
+document.getElementById("rate").textContent = total?Math.round((completed/total)*100)+"%":"0%";
+
+const quotes=["Stay focused 🔥","Push yourself 💪","Dream big 🚀","Consistency wins 🏆"];
+document.getElementById("quote").textContent=quotes[Math.floor(Math.random()*quotes.length)];
+
+const tips=["Break goals into steps","Set deadlines","Track daily","Reward yourself"];
+document.getElementById("tip").textContent=tips[Math.floor(Math.random()*tips.length)];
+
+let chart, barChart;
+
+function showGraph(){
+  dashboard.style.display="none";
+  graphSection.style.display="block";
+
+  const ctx=document.getElementById("myChart");
+  const barCtx=document.getElementById("barChart");
+
+  if(chart) chart.destroy();
+  if(barChart) barChart.destroy();
+
+  chart=new Chart(ctx,{
+    type:'doughnut',
+    data:{
+      labels:["Completed","Progress","Pending"],
+      datasets:[{
+        data:[completed,progress,pending],
+        backgroundColor:["green","orange","red"]
+      }]
+    },
+    options:{maintainAspectRatio:false}
+  });
+
+  barChart=new Chart(barCtx,{
+    type:'bar',
+    data:{
+      labels:["Completed","Progress","Pending"],
+      datasets:[{
+        data:[completed,progress,pending],
+        backgroundColor:["green","orange","red"]
+      }]
+    },
+    options:{maintainAspectRatio:false}
+  });
+}
+
+function showDashboard(){
+  dashboard.style.display="block";
+  graphSection.style.display="none";
+}
+
+function logout(){
+  window.location.href="registration.html";
+}
+</script>
+
+</body>
+</html>

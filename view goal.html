@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Trackify - View Goals</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: url('10141608.jpg') no-repeat center center fixed;
+  background-size: cover;
+}
+
+/* 🔥 SIDEBAR */
+.sidebar {
+  width: 220px;
+  background: orangered;
+  height: 100vh;
+  padding: 20px;
+  position: fixed;
+  left: 0;
+  top: 0;
+}
+
+.sidebar h2 {
+  color: white;
+}
+
+.sidebar button {
+  width: 100%;
+  margin: 10px 0;
+  padding: 12px;
+  border: none;
+  background: white;
+  color: orangered;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* 🔥 TOP NAVBAR */
+.top-navbar {
+  background: orangered;
+  color: white;
+  padding: 15px 20px;
+  margin-left: 220px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 22px;
+  font-weight: bold;
+}
+
+/* 🔥 LOGOUT */
+.logout-btn {
+  background: black;
+  color: white;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* 🔥 ORIGINAL CONTAINER SHIFT */
+.container {
+  max-width: 900px;
+  margin: 30px auto;
+  margin-left: 260px; /* shift right */
+}
+
+/* 🔥 YOUR ORIGINAL STYLES (UNCHANGED) */
+.goal-card {
+  background: #ffffff;
+  border-left: 8px solid #3f51b5;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 12px;
+  position: relative;
+}
+
+.progress-container {
+  background-color: #ddd;
+  border-radius: 20px;
+  height: 20px;
+  margin-top: 10px;
+}
+
+.progress-bar {
+  height: 100%;
+  text-align: center;
+  color: white;
+  font-size: 12px;
+  line-height: 20px;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.edit-btn {
+  background: #2196F3;
+  color: white;
+}
+
+.delete-btn {
+  background: #f44336;
+  color: white;
+}
+
+.edit-btn, .delete-btn {
+  flex: 1;
+  padding: 8px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.countdown-container {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  padding: 10px;
+  border-radius: 8px;
+  color: white;
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- 🔥 SIDEBAR -->
+<div class="sidebar">
+  <h2>🚀 Trackify</h2>
+  <button onclick="location.href='home.html'">🏠 Dashboard</button>
+  <button onclick="location.href='add goal.html'">➕ Add Goal</button>
+  <button onclick="location.href='view goal.html'">📋 View Goals</button>
+  <button onclick="location.href='home.html#graph'">📊 Graph View</button>
+</div>
+
+<!-- 🔥 TOP NAVBAR -->
+<div class="top-navbar">
+  📋 My Goals
+  <button class="logout-btn" onclick="logout()">Logout</button>
+</div>
+
+<!-- 🔥 YOUR ORIGINAL CONTENT -->
+<div class="container" id="goalList"></div>
+
+<script>
+const goalList = document.getElementById("goalList");
+let goals = JSON.parse(localStorage.getItem("goals")) || [];
+
+function renderGoals() {
+  goalList.innerHTML = "";
+
+  if (goals.length === 0) {
+    goalList.innerHTML = "<h3>No goals found</h3>";
+    return;
+  }
+
+  goals.forEach((goal, index) => {
+
+    let color = goal.progress < 40 ? "red" :
+                goal.progress < 70 ? "orange" : "green";
+
+    let status = goal.progress === 100 ? "Completed" :
+                 goal.progress > 0 ? "In Progress" : "Not Started";
+
+    const card = document.createElement("div");
+    card.className = "goal-card";
+
+    card.innerHTML = `
+      <div class="countdown-container"></div>
+
+      <h3>${goal.title}</h3>
+      <p><b>Description:</b> ${goal.desc}</p>
+      <p><b>Deadline:</b> ${goal.deadline}</p>
+      <p><b>Status:</b> ${status}</p>
+
+      <div class="progress-container">
+        <div class="progress-bar" style="width:${goal.progress}%;background:${color}">
+          ${goal.progress}%
+        </div>
+      </div>
+
+      <input type="number" id="input-${index}" placeholder="%" min="0" max="100">
+      <button onclick="updateProgress(${index})">Update</button>
+
+      <div class="action-buttons">
+        <button class="edit-btn" onclick="editGoal(${index})">Edit</button>
+        <button class="delete-btn" onclick="deleteGoal(${index})">Delete</button>
+      </div>
+    `;
+
+    goalList.appendChild(card);
+  });
+}
+
+function updateProgress(i){
+  let val = document.getElementById(`input-${i}`).value;
+  goals[i].progress = parseInt(val);
+  localStorage.setItem("goals", JSON.stringify(goals));
+  renderGoals();
+}
+
+function deleteGoal(i){
+  goals.splice(i,1);
+  localStorage.setItem("goals", JSON.stringify(goals));
+  renderGoals();
+}
+
+function editGoal(i){
+  let newTitle = prompt("Edit Title", goals[i].title);
+  if(newTitle) goals[i].title = newTitle;
+  localStorage.setItem("goals", JSON.stringify(goals));
+  renderGoals();
+}
+
+function logout(){
+  window.location.href="registration.html";
+}
+
+renderGoals();
+</script>
+
+</body>
+</html>

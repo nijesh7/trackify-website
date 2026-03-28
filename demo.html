@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>View Goals</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #fdfcfb, #e2d1c3);
+      min-height: 100vh;
+      background-image: url('10141608.jpg');
+    }
+
+    .navbar {
+      background-color: #3f51b5;
+      color: white;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+    }
+
+    .navbar-title {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 30px;
+      font-weight: bold;
+    }
+
+    .logout-btn {
+      background-color: white;
+      color: #3f51b5;
+      padding: 8px 16px;
+      font-size: 14px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .logout-btn:hover {
+      background-color: #dcdcdc;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    .goal-card {
+      background: #ffffff;
+      border: 2px solid #3f51b5;
+      border-left-width: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transition: transform 0.2s;
+    }
+
+    .goal-card:hover {
+      transform: scale(1.02);
+    }
+
+    .goal-card h3 {
+      margin-top: 0;
+      color: #3f51b5;
+      font-size: 22px;
+    }
+
+    .goal-card p {
+      margin: 5px 0;
+      color: #333;
+    }
+
+    .no-goals {
+      text-align: center;
+      color: #777;
+      font-size: 18px;
+      margin-top: 50px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="navbar">
+    <div class="navbar-title">📋 My Goals</div>
+    <div style="margin-left: auto;">
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+  </div>
+
+  <div class="container" id="goalList">
+    <!-- Goals will appear here -->
+  </div>
+
+  <script>
+    const goalList = document.getElementById("goalList");
+
+    let goals = JSON.parse(localStorage.getItem("goals")) || [];
+
+    if (goals.length === 0) {
+      goals = [
+        { title: "📘 Maths Homework", desc: "Finish algebra chapter", deadline: "2025-04-28" },
+        { title: "🏃 Fitness Routine", desc: "Morning run for 30 mins", deadline: "2025-04-25" },
+        { title: "🧹 Clean Room", desc: "Organize books and desk", deadline: "2025-04-26" },
+        { title: "📖 Read Book", desc: "Read 20 pages of novel", deadline: "2025-04-30" }
+      ];
+    }
+
+    goals.forEach(goal => {
+      const card = document.createElement("div");
+      card.className = "goal-card";
+      card.innerHTML = `
+        <h3>${goal.title}</h3>
+        <p><strong>Description:</strong> ${goal.desc}</p>
+        <p><strong>Deadline:</strong> ${goal.deadline}</p>
+      `;
+      goalList.appendChild(card);
+    });
+
+    function logout() {
+      alert("Logging out...");
+      window.location.href = "REGISTRATION.html"; // redirect to registration page
+    }
+  </script>
+
+</body>
+</html>
